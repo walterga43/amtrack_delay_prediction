@@ -24,7 +24,6 @@ def get_train_data():
     data = json.load(f)
   return data
 
-
 if os.path.exists("raw_train_output.json"):
     file_age = time.time() - os.path.getmtime("raw_train_output.json")
     if file_age < 30 * 60:
@@ -40,4 +39,3 @@ else:
   else:
     print("Failed")
         
-print(data)
