@@ -2,7 +2,7 @@
 
 Project Overview
 Goal: Build a real time Amrtack delay tracking in order to study what makes these trains not on time
-Status: Week 2: Data exploration
+Week 2: Data exploration
 
 #### **Data Source**
 - API: Amtraker API (https://api-v3.amtraker.com/v3/)
