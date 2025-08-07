@@ -41,9 +41,30 @@ Week 1: Data Collection & Exploration
 - Average delays grouped by route
 
 **Timezone conversion**
-
+```python
 stations_df[col] = pd.to_datetime(stations_df[col], errors='coerce', utc=True)
+```
 
+## **Automated Data collection
+
+#### **Usage**
+
+**One-time Data Collection**
+```python
+from automated_collection import HistoricalDataManager
+
+manager = HistoricalDataManager()
+manager.collect_and_store() 
+```
+
+**Continuous Automated Collection**
+```bash
+# Run this command to start continuous collection every 30 minutes
+python automated_collection.py
+```
+**Note:** Keep your computer awake and connected to internet for continuous collection.
+
+Press Ctrl+C in the terminal to stop automated collection.
 
 Last Updated: 8/7/2025
 
