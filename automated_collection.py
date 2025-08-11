@@ -19,9 +19,10 @@ class HistoricalDataManager:
         station_df = self.process_station_data(raw)
         train_df = self.process_train_data(raw)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        station_df.to_csv(f"{self.data_dir}/historical/stations_{timestamp}.csv", index=False)
-        train_df.to_csv(f"{self.data_dir}/historical/trains_{timestamp}.csv", index=False)
+        
         print(f"Collected {len(station_df)} station records, {len(train_df)} train records")
+
+        self.append_to_master(station_df, train_df)
     except Exception as e:
       print(f"Error during collection: {e}")
 
@@ -35,6 +36,7 @@ class HistoricalDataManager:
       
         for station in train.get('stations', []):
           station_record = {
+            'collection_timestamp': datetime.now(),
             'train_number': train_number,
             'train_id': train_id,
             'route_name': route_name,
@@ -64,6 +66,7 @@ class HistoricalDataManager:
     for train_number, train_list in raw_data.items():
       for train in train_list:
         train_record = {
+          'collection_timestamp': datetime.now(),
           'train_number': train_number,
           'route_name': train.get('routeName', ''),
           'train_id': train.get('trainID', ''),
@@ -89,10 +92,10 @@ class HistoricalDataManager:
       station_df.to_csv(master_stations_file, index=False)
 
     master_train_file = f"{self.data_dir}/historical/all_trains.csv"
-    if os.path.exists(master_stations_file):
-      station_df.to_csv(master_stations_file, mode='a', header=False, index=False)
+    if os.path.exists(master_train_file):
+      station_df.to_csv(master_train_file, mode='a', header=False, index=False)
     else:
-      station_df.to_csv(master_stations_file, index=False)
+      station_df.to_csv(master_train_file, index=False)
 
   def get_historical_data(self, days_back=7):
     master_file = f"{self.data_dir}/historical/all_stations.csv"
@@ -113,7 +116,7 @@ class HistoricalDataManager:
     print("Starting data collection")
     print("Data will be collected at 30 minute intervals (press CRTL + C to stop)")
 
-    schedule.every(30).minutes.do(self.collect_and_store)
+    schedule.every(30).minutes.do(self.collect_and_store())
     self.collect_and_store
 
     while True:
